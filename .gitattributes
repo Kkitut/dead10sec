@@ -1,0 +1,8 @@
+include/** linguist-vendored
+lib/** linguist-vendored
+src/stb_impl.c linguist-vendored
+src/c.h linguist-vendored
+Shader/** linguist-vendored
+src/shader/** linguist-vendored
+Assets/** linguist-vendored
+src/assets/** linguist-vendored

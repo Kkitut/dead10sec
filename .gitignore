@@ -1,0 +1,28 @@
+# Build results
+[Bb]in/
+[Oo]bj/
+dist/
+.zig-cache/
+zig-out/
+cleared.dat
+
+# Visual Studio / IDE
+.vs/
+.vscode/
+*.user
+*.suo
+*.userosscache
+*.sln.docstates
+
+# Graphics tool temp files
+*.kra~
+*.kra-autosave.kra
+*.png~
+
+# Scratch & Logs
+scratch/
+*.log
+
+# OS generated
+.DS_Store
+Thumbs.db
