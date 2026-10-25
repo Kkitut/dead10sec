@@ -1,5 +1,7 @@
 # 10 SECONDS TO DOOM
 
+![title](title.png)
+
 A minimal timer game  
 In-game dialogue and text are in Korean.  
 
