@@ -470,6 +470,7 @@ fn keyCallback(window: ?*c.GLFWwindow, key: c_int, _: c_int, action: c_int, mods
                 if (!game_running) {
                     game_running = true;
                     game_elapsed = 0;
+                    idle_time = 0;
                     requestRender();
                 } else {
                     finishMiniGame();
