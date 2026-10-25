@@ -28,6 +28,7 @@ pub fn build(b: *std.Build) void {
     exe.root_module.addCSourceFile(.{ .file = b.path("src/stb_impl.c") });
 
     if (target.result.os.tag == .windows) {
+        exe.subsystem = .windows;
         exe.root_module.addLibraryPath(b.path("lib/win64"));
         exe.root_module.linkSystemLibrary("glfw3", .{});
         exe.root_module.linkSystemLibrary("vulkan-1", .{});
