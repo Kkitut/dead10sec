@@ -221,7 +221,7 @@ const bad_end_script = [_][]const u8{
     "\"측정 실패. 핵폭탄을 발사합니다.\"",
     "@name 이하율",
     "@bg Images/bads0.png",
-    "[s]\"아니 씨발 잠깐만—\"[/]",
+    "[s]\"아니 씨발 잠깐만-\"[/]",
 };
 
 const idle_end_script = [_][]const u8{
@@ -304,7 +304,7 @@ fn finishMiniGame() void {
         markEndingCleared(gpa_allocator, "true");
         if (success_sound) |s| s.play();
         scene.setBackground("Images/btnpress.png");
-        playEndingScript(&true_end_script, "엔딩 2 — 세계구원", "TRUE END", .{ 0.1, 0.58, 0.25, 1.0 }, false);
+        playEndingScript(&true_end_script, "엔딩 1 - 진엔딩", "TRUE END", .{ 0.1, 0.58, 0.25, 1.0 }, false);
     } else if (diff <= 1.00) {
         markEndingCleared(gpa_allocator, "notbad");
         if (not_bad_sound) |s| s.play();
@@ -312,15 +312,15 @@ fn finishMiniGame() void {
 
         @memcpy(&notbad_script_storage, &notbad_end_script);
         notbad_script_storage[1] = std.fmt.bufPrint(&notbad_line1_buf, "\"측정 결과 {d:.2}초. 허용 오차를 초과하지 않았습니다.\"", .{measured_time}) catch notbad_end_script[1];
-        const sub = std.fmt.bufPrint(&notbad_sub_buf, "측정 기록: {d:.2}초", .{measured_time}) catch "ENDING 2 — NOT BAD";
-        playEndingScript(&notbad_script_storage, "ENDING 2 — NOT BAD", sub, .{ 0.12, 0.42, 0.78, 1.0 }, false);
+        const sub = std.fmt.bufPrint(&notbad_sub_buf, "측정 기록: {d:.2}초", .{measured_time}) catch "측정 기록";
+        playEndingScript(&notbad_script_storage, "엔딩 2 - 나쁘진 않아", sub, .{ 0.12, 0.42, 0.78, 1.0 }, false);
     } else {
         markEndingCleared(gpa_allocator, "bad");
         scene.setBackground("Images/btnpress.png");
 
         @memcpy(&bad_script_storage, &bad_end_script);
         bad_script_storage[1] = std.fmt.bufPrint(&bad_line1_buf, "\"측정 실패 (기록: {d:.2}초). 핵폭탄을 발사합니다.\"", .{measured_time}) catch bad_end_script[1];
-        playEndingScript(&bad_script_storage, "엔딩 1 — 세계멸망 (BAD)", "GAME OVER", .{ 1.0, 0.25, 0.25, 1.0 }, false);
+        playEndingScript(&bad_script_storage, "엔딩 0 - 세계멸망", "GAME OVER", .{ 1.0, 0.25, 0.25, 1.0 }, false);
     }
 }
 
@@ -330,7 +330,7 @@ fn triggerIdleEnding() void {
     idle_time = 0;
     measured_time = 0;
     scene.setBackground("Images/hidden.png");
-    playEndingScript(&idle_end_script, "엔딩 3 — 제작자 책임", "플레이어 부재", .{ 0.78, 0.36, 0.05, 1.0 }, false);
+    playEndingScript(&idle_end_script, "엔딩 3 - 부재", "플레이어 부재", .{ 0.78, 0.36, 0.05, 1.0 }, false);
 }
 
 fn finishEndingDialog() void {
@@ -342,7 +342,7 @@ fn finishEndingDialog() void {
     } else {
         if (std.mem.eql(u8, current_ending_subtitle, "TRUE END")) {
             scene.setBackground("Images/good.png");
-        } else if (std.mem.indexOf(u8, current_ending_title, "NOT BAD") != null) {
+        } else if (std.mem.indexOf(u8, current_ending_title, "나쁘진 않아") != null or std.mem.indexOf(u8, current_ending_title, "NOT BAD") != null) {
             scene.setBackground("Images/notbad.png");
         } else if (std.mem.eql(u8, current_ending_subtitle, "THANKS FOR PLAYING!")) {
             scene.setBackground("Images/thanks.png");
@@ -782,12 +782,13 @@ pub fn main() !void {
             } else if (state == .GameOver) {
                 const left_pad: f32 = 36.0;
                 const outline_col = [4]f32{ 1, 1, 1, 1 };
-                renderer2d.drawTextOutlined(fontTitle, "GAME OVER", .{ left_pad, 60 }, .{ 0.9, 0.15, 0.15, 1.0 }, outline_col, 2, 1.0, false);
-                renderer2d.drawTextOutlined(fontBold, "측정 실패. 전 세계의 핵폭탄이 동시 기폭되었습니다.", .{ left_pad, 110 }, .{ 0, 0, 0, 1.0 }, outline_col, 2, 1.0, false);
+                renderer2d.drawTextOutlined(fontBold, current_ending_title, .{ left_pad, 45 }, ending_color, outline_col, 2, 1.0, false);
+                renderer2d.drawTextOutlined(fontTitle, "GAME OVER", .{ left_pad, 75 }, .{ 0.9, 0.15, 0.15, 1.0 }, outline_col, 2, 1.0, false);
+                renderer2d.drawTextOutlined(fontBold, "측정 실패. 전 세계의 핵폭탄이 동시 기폭되었습니다.", .{ left_pad, 130 }, .{ 0, 0, 0, 1.0 }, outline_col, 2, 1.0, false);
 
                 var rec_buf: [64]u8 = undefined;
                 const rec_str = std.fmt.bufPrint(&rec_buf, "측정 기록: {d:.2}초", .{measured_time}) catch "측정 기록";
-                renderer2d.drawTextOutlined(fontBold, rec_str, .{ left_pad, 140 }, .{ 0, 0, 0, 1.0 }, outline_col, 2, 1.0, false);
+                renderer2d.drawTextOutlined(fontBold, rec_str, .{ left_pad, 160 }, .{ 0, 0, 0, 1.0 }, outline_col, 2, 1.0, false);
                 renderer2d.drawTextOutlined(fontBold, "[ 스페이스바 ] 타이틀로", .{ left_pad, 305 }, .{ 0, 0, 0, 1.0 }, outline_col, 2, 1.0, false);
             } else if (state == .Result) {
                 const left_pad: f32 = 36.0;
